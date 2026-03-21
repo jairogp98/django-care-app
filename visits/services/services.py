@@ -1,21 +1,13 @@
-from django.core.exceptions import ObjectDoesNotExist
+from .exceptions import (CaregiverScheduleConflictError,
+                         VisitAlreadyCancelledError,
+                         VisitTaskAlreadyCompletedError,
+                         VisitHasPendingMandatoryTasksError)
 from django.db import transaction
 from django.utils import timezone
 
 from ..models.models import Visit, VisitTask, VisitNote
 
 class VisitService:
-    class CaregiverScheduleConflictError(Exception):
-        pass
-
-    class VisitTaskAlreadyCompletedError(Exception):
-        pass
-
-    class VisitHasPendingMandatoryTasksError(Exception):
-        pass
-
-    class VisitAlreadyCancelledError(Exception):
-        pass
 
     @staticmethod
     def create_visit(

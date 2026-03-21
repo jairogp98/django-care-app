@@ -56,6 +56,11 @@ class VisitViewSet(
         serializer = self.get_serializer(visit)
         return Response(serializer.data)
 
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        #TODO
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
