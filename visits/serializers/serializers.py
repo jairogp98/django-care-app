@@ -7,6 +7,10 @@ from ..models.models import Visit, VisitTask, VisitNote
 User = get_user_model()
 
 class VisitTaskSerializer(serializers.ModelSerializer):
+    assigned_caregiver = serializers.CharField(
+                        source="visit.assigned_caregiver.username",
+                        read_only=True,
+                    )
     class Meta:
         model = VisitTask
         fields = (
@@ -16,6 +20,7 @@ class VisitTaskSerializer(serializers.ModelSerializer):
             "is_mandatory",
             "is_completed",
             "completed_at",
+            "assigned_caregiver"
         )
 
 class VisitTaskInputSerializer(serializers.Serializer):
@@ -51,6 +56,7 @@ class VisitListSerializer(serializers.ModelSerializer):
     assigned_caregiver = serializers.StringRelatedField()
     total_tasks = serializers.IntegerField(read_only=True)
     completed_tasks = serializers.IntegerField(read_only=True)
+    afternoon_visit = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Visit
@@ -64,6 +70,7 @@ class VisitListSerializer(serializers.ModelSerializer):
             "scheduled_end",
             "total_tasks",
             "completed_tasks",
+            "afternoon_visit",
         )
 
 class VisitNoteSerializer(serializers.ModelSerializer):

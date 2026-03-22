@@ -138,3 +138,11 @@ class VisitViewSet(
 
         visit = get_object_or_404(self.visit_selector.get_visit_detail_queryset(), pk=visit.pk)
         return Response(VisitDetailSerializer(visit).data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"], url_path="tasks_by_caregiver")
+    def list_tasks_by_caregiver(self, request, *args, **kwargs):
+        caregiver_id = request.query_params.get("caregiver_id", None)
+        queryset = self.visit_selector.get_tasks_by_caregiver(caregiver_id=caregiver_id)
+        serializer = VisitTaskSerializer(queryset, many=True)
+
+        return Response(serializer.data)

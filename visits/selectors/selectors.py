@@ -1,4 +1,4 @@
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Prefetch, Q, Case, When, Value, BooleanField, Min, Max
 
 from ..models.models import Visit, VisitTask, VisitNote
 
@@ -18,6 +18,14 @@ class VisitSelector:
                     filter=Q(tasks__is_completed=True),
                     distinct=True,
                 ),
+                afternoon_visit=Case(
+                            When(
+                                    scheduled_start__hour__gte=12,
+                                    then=Value(True),
+                                    ),
+                                default=Value(False),
+                                output_field=BooleanField(),
+                            )
             )
         )
 
@@ -68,4 +76,12 @@ class VisitSelector:
                 status=Visit.Status.SCHEDULED,
             )
             .order_by("scheduled_start")
+        )
+
+    @staticmethod
+    def get_tasks_by_caregiver(*, caregiver_id):
+        return (
+            VisitTask.objects
+            .select_related("visit__assigned_caregiver")
+            .filter(visit__assigned_caregiver_id=caregiver_id)
         )

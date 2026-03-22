@@ -27,7 +27,7 @@ class Visit(models.Model):
     assigned_caregiver = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        related_name="assigned_visits",
+        related_name="assigned_caregiver",
     )
     visit_type = models.CharField(
         max_length=32,
@@ -98,7 +98,7 @@ class VisitNote(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        related_name="visit_notes",
+        related_name="notes_author",
     )
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
