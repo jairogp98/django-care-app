@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework.response import Response
 
 from ..selectors.selectors import VisitSelector
@@ -24,6 +25,7 @@ class VisitViewSet(
     mixins.CreateModelMixin,
     viewsets.GenericViewSet,
 ):
+    permission_classes = [DjangoModelPermissions]
     queryset = Visit.objects.none()
     visit_selector = VisitSelector()
     visit_service = VisitService()
