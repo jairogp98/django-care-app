@@ -18,6 +18,11 @@ from ..serializers.serializers import (
     VisitWriteSerializer,
 )
 
+from ..services.exceptions import (CaregiverScheduleConflictError,
+                         VisitAlreadyCancelledError,
+                         VisitTaskAlreadyCompletedError,
+                         VisitHasPendingMandatoryTasksError)
+
 
 class VisitViewSet(
     mixins.ListModelMixin,
@@ -69,7 +74,7 @@ class VisitViewSet(
 
         try:
             visit = self.visit_service.create_visit(**serializer.validated_data)
-        except self.visit_service.CaregiverScheduleConflictError as exc:
+        except CaregiverScheduleConflictError as exc:
             raise ValidationError({"detail": str(exc)})
         except ValueError as exc:
             raise ValidationError({"detail": str(exc)})
@@ -108,7 +113,7 @@ class VisitViewSet(
 
         try:
             task = self.visit_service.complete_task(task=task)
-        except self.visit_service.VisitTaskAlreadyCompletedError as exc:
+        except VisitTaskAlreadyCompletedError as exc:
             raise ValidationError({"detail": str(exc)})
 
         return Response(VisitTaskSerializer(task).data, status=status.HTTP_200_OK)
@@ -119,7 +124,7 @@ class VisitViewSet(
 
         try:
             visit = self.visit_service.complete_visit(visit=visit)
-        except self.visit_service.VisitHasPendingMandatoryTasksError as exc:
+        except VisitHasPendingMandatoryTasksError as exc:
             raise ValidationError({"detail": str(exc)})
         except ValueError as exc:
             raise ValidationError({"detail": str(exc)})
@@ -133,7 +138,7 @@ class VisitViewSet(
 
         try:
             visit = self.visit_service.cancel_visit(visit=visit)
-        except self.visit_service.VisitAlreadyCancelledError as exc:
+        except VisitAlreadyCancelledError as exc:
             raise ValidationError({"detail": str(exc)})
         except ValueError as exc:
             raise ValidationError({"detail": str(exc)})
