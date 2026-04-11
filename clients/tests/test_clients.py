@@ -68,3 +68,17 @@ class TestClientViewSet:
         response = self.api_client.post(url, data)
 
         assert response.status_code == 201
+
+    def test_testing(self):
+        a_set = {1,2,3,4}
+        a_list = [2,3,4,7]
+        a_dict = {
+            "clave": "valor",
+            "clave2": "valor2"
+        }
+        cleaned_list = [5 if i == 2 else i for i in a_set]
+        cleaned_dict = {k:v for (k,v) in a_dict.items() if k != "clave2"}
+
+        sumar = lambda x,y,z,i,j: x+y+z+i+j
+
+        print(sumar(3,4,2,9,8))
